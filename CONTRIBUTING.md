@@ -53,6 +53,11 @@ When you rebase `main` into your feature branch, you will need to force-push it 
 git push origin feature/my-feature-branch-name-here --force
 ```
 
+Run Black: https://github.com/psf/black
+
+*Bonus Points*
+For using types, running flake8/mypy for linter.
+
 ### 4. Creating a PR
 
 You'll need to make a PR. Write tests for python and fill out the PR checklist.
