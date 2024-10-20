@@ -1,0 +1,15 @@
+artifact_types:
+  - name: "source"
+    pattern: "magento|nextgen"
+    color: "#FF4136"
+    shape: "rectangle"
+    
+  - name: "google sheet"
+    pattern: "google"
+    color: "#00FF00"
+    shape: "triangle"
+
+  - name: "databricks"
+    pattern: "databricks"
+    color: "#00FF00"
+    shape: "circle"
