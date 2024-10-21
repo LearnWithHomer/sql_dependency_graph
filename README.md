@@ -8,6 +8,7 @@ At Begin, we are faced with the challenge of consolidating many legacy warehouse
 
 ### Installing `sql_dependency_graph` package.
 
+Recommended to use a [virtual environment](https://docs.python.org/3/library/venv.html)
 ``` bash
 cd path/to/top/level/repository
 pip3 install -r requirements.txt
@@ -90,6 +91,13 @@ sql_dependency_graph viz --sql_dir bigquery relationship parent --root_artifact 
 ```
 
 Will show a subgraph of `{project}.{dataset}.{table}` parents.
+
+### Tests
+
+Run tests with
+``` bash
+pytest
+```
 
 ## Future Enhancements & Contribution Requests
 

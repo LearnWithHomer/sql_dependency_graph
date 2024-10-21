@@ -52,10 +52,11 @@ def _validate_graph_config(config: GraphConfig) -> None:
         raise TypeError("'artifact_types' must be a list.")
 
     for idx, artifact in enumerate(artifact_types):
+        required_fields = ["name", "pattern", "color", "shape"]
         if not isinstance(artifact, dict):
             raise TypeError(f"Artifact type at index {idx} must be a dictionary.")
+        assert set(artifact.keys()) == set(required_fields)
 
-        required_fields = ["name", "pattern", "color", "shape"]
         for field in required_fields:
             if field not in artifact:
                 raise ValueError(
@@ -68,7 +69,7 @@ def _validate_graph_config(config: GraphConfig) -> None:
 
 
 def _identify_artifact_type(
-    artifact: str, root_artifact: str, artifact_types: list[ArtifactType]
+    artifact: str, root_artifact: Optional[str], artifact_types: list[ArtifactType]
 ) -> str:
     """Determine the artifact type based on regex patterns loaded from the config."""
     if root_artifact == artifact:
@@ -118,14 +119,7 @@ def _create_dependency_viz_elements(
     dependency_graph_viz_elems = []
     artifacts: list[Artifact] = _get_unique_artifacts(dependency_graph)
     for artifact in artifacts:
-        try:
-            artifact_type = _identify_artifact_type(
-                artifact, root_artifact, artifact_types
-            )
-        except:
-            import pdb
-
-            pdb.set_trace()
+        artifact_type = _identify_artifact_type(artifact, root_artifact, artifact_types)
         dependency_graph_viz_elems.append(
             {
                 "data": {
@@ -205,7 +199,7 @@ def viz(
     relationship: str,
     root_artifact: Optional[str],
     graph_type: str,
-    config_path: Optional[str],
+    config_path: Optional[Path | str],
 ):
     """
     Displays dependencies as a graph structure in your browswer.
@@ -331,4 +325,4 @@ def viz(
         ]
     )
 
-    app.run_server(debug=True)
+    app.run_server()

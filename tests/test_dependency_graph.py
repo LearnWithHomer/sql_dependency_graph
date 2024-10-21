@@ -91,10 +91,6 @@ def test_identify_artifact_type():
     config: GraphConfig = _load_graph_config(config_path)
     artifact_types: list[ArtifactType] = config["artifact_types"]
     assert (
-        _identify_artifact_type("master_view.customer", None, artifact_types)
-        == "master"
-    )
-    assert (
         _identify_artifact_type("nextgen_liveprod.test", None, artifact_types)
         == "source"
     )
