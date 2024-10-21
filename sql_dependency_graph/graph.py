@@ -1,7 +1,7 @@
 from collections import defaultdict
 from pathlib import Path
 import re
-from typing import DefaultDict, Optional, TypeAlias
+from typing import cast, DefaultDict, Optional, TypeAlias
 
 
 # Artifact is any location you want to parse in your files.
@@ -27,7 +27,9 @@ def _get_dependencies(sql: str) -> list[Artifact]:
     return list(set(re.findall(dependency_regex, sql)))
 
 
-def _convert_path_to_artifact(sql_dir: str, artifact_path: str) -> Artifact:
+def _convert_path_to_artifact(
+    sql_dir: str | Path, artifact_path: str | Path
+) -> Artifact:
     """
     Parses {schema}.{artifact} from the path.
 
@@ -119,9 +121,8 @@ def create_dependency_graph(
     dependency_graph: DependencyGraph = defaultdict(list)
     artifacts: list[Artifact] = list(path_lookup.keys())
     for artifact in artifacts:
-        file = open(path_lookup[artifact])
-        sql = file.read()
-        file.close()
+        with open(path_lookup[artifact]) as file:
+            sql = file.read()
         dependencies: list[Artifact] = _get_dependencies(sql)
         dependency_graph = _create_dependency_graph_helper(
             artifact, dependencies, dependency_graph, relationship
@@ -130,7 +131,7 @@ def create_dependency_graph(
         # Note: If performance is an issue, consider creating the subgraph
         # first.
         dependency_graph = _create_dependency_subgraph(dependency_graph, root_artifact)
-    return dependency_graph
+    return cast(DependencyGraph, dependency_graph)
 
 
 def _create_dependency_subgraph(
@@ -160,9 +161,10 @@ def _create_dependency_subgraph(
         else:
             subgraph_artifacts.append(lookup_artifact)
         visited.add(lookup_artifact)
-    dependency_subgraph = dict(
-        (artifact, dependency_graph[artifact])
+    dependency_dict = {
+        artifact: dependency_graph[artifact]
         for artifact in subgraph_artifacts
         if artifact in dependency_graph.keys()
-    )
+    }
+    dependency_subgraph: DependencyGraph = defaultdict(list, dependency_dict)
     return dependency_subgraph

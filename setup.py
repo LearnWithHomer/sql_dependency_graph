@@ -18,7 +18,7 @@ def get_package_description() -> str:
 
 
 setuptools.setup(
-    name="dependency_graph",
+    name="sql_dependency_graph",
     version=sql_dependency_graph.__version__,
     author="Colin Manko",
     author_email="colin.manko@beginlearning.com",
@@ -32,5 +32,5 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     scripts=get_scripts_from_bin(),
-    python_requires=">=3.10",
+    python_requires=">=3.11",
 )
